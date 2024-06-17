@@ -1,6 +1,5 @@
-package vikas.eu.inviertoapp.entidad.red
+package vikas.eu.inviertoapp.entidad
 
-import eu.vikas.invierto.model.TipoTransaccion
 import java.time.LocalDate
 
 data class Transaccion(
@@ -9,7 +8,7 @@ data class Transaccion(
 
     var monto: Double? = null,
 
-    var fecha: LocalDate? = null,
+    var fecha: String? = null,
 
     var detalle: String? = null,
 
@@ -17,5 +16,8 @@ data class Transaccion(
 
     var destinoId: String? = null,
 
-    var tipo: TipoTransaccion? = null
+    var tipo: TipoTransaccion? = null,
+
+    // extra para calculos
+    var saldo: Double? = null
 )

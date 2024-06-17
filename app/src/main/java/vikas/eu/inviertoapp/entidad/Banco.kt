@@ -1,4 +1,4 @@
-package vikas.eu.inviertoapp.entidad.red
+package vikas.eu.inviertoapp.entidad
 
 data class Banco(
     var id: Long? = null,

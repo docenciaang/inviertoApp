@@ -1,4 +1,4 @@
-package vikas.eu.inviertoapp.entidad.red
+package vikas.eu.inviertoapp.entidad
 
 import java.time.LocalDate
 

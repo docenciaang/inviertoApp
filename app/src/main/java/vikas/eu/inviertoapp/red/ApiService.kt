@@ -1,4 +1,4 @@
-package vikas.eu.inviertoapp.entidad.red
+package vikas.eu.inviertoapp.red
 
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -40,7 +40,7 @@ val okHttpClient = OkHttpClient.Builder()
     .connectTimeout(15, TimeUnit.SECONDS)  // Tiempo de espera de conexión
     .readTimeout(15, TimeUnit.SECONDS)     // Tiempo de espera de lectura
     .writeTimeout(15, TimeUnit.SECONDS)    // Tiempo de espera de escritura
-  //  .addInterceptor(logging)
+    .addInterceptor(logging)
     .cookieJar(JavaNetCookieJar(cookieManager))
     .build()
 
@@ -53,5 +53,6 @@ private val retrofit = Retrofit.Builder()
 
 
 object ApiService {
-    val usuarioService: UsuarioService by lazy{ retrofit.create(UsuarioService::class.java)}
+    val inversionService: InversionService by lazy{ retrofit.create(InversionService::class.java)}
+    val transaccionesService: TransaccionService by lazy{ retrofit.create(TransaccionService::class.java)}
 }

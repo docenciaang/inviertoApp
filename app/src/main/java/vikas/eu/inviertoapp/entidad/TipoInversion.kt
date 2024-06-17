@@ -1,4 +1,4 @@
-package eu.vikas.invierto.model
+package vikas.eu.inviertoapp.entidad
 
 
 enum class TipoInversion {
