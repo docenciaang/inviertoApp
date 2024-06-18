@@ -12,19 +12,19 @@ import vikas.eu.inviertoapp.entidad.RespuestaId
 import vikas.eu.inviertoapp.entidad.Transaccion
 
 interface TransaccionService {
-    @GET("transaciones/{id}")
+    @GET("transacciones/{id}")
     suspend fun getTransaccion(@Path("id") id: Long): Response<Transaccion>
 
-    @GET("transaciones")
+    @GET("transacciones")
     suspend fun getAll(): Response<List<Transaccion>>
 
-    @POST("transaciones")
+    @POST("transacciones")
     suspend fun insertar(@Body transaccion: Transaccion): Response<RespuestaId>
 
-    @DELETE("transaciones/{id}")
+    @DELETE("transacciones/{id}")
     suspend fun borrar(@Path("id")id:Long): Response<Void>
 
-    @PUT("transaciones/{id}")
+    @PUT("transacciones/{id}")
     suspend fun actualizar(@Path("id")id: Long, @Body transaccion: Transaccion): Response<Transaccion>
 
 }

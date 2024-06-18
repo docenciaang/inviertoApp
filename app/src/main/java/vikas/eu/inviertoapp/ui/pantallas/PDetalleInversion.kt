@@ -57,16 +57,11 @@ fun PDetalleInversion(
                     onTransaccion( false)
                 }) {
                     Text(text = "${it.fecha} :  ${it.monto} € : ${it.saldo} €")
-
                 }
-
-
-
             }
         }
 
         FloatingActionButton(onClick = {
-            vm.nuevaTransaccion()
             onTransaccion(true)
         }) {
             Icon(Icons.Default.Add, contentDescription = "Add")
@@ -80,7 +75,7 @@ fun PDetalleInversion(
 @Composable
 fun Detalle(trans: Transaccion) {
     Column {
-        Text(text = "${trans.tipo} \n ${trans.fecha} \n ${trans.monto} \n ${trans.origneId} \n ${trans.hashCode()}")
+        Text(text = "${trans.tipo} \n ${trans.fecha} \n ${trans.monto} \n ${trans.origenId} \n ${trans.hashCode()}")
 
     }
 }

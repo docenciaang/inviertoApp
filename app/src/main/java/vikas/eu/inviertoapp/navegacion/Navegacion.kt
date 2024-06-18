@@ -49,7 +49,7 @@ fun Navegacion(
         }
         composable(Rutas.NUEVA_TRANSACCION.ruta){
             PNuevaTransaccion(vm) {
-                navController.navigate(Rutas.DETALLE_INVERSION.ruta)
+                navController.navigate(Rutas.TRANSACCION.ruta)
             }
         }
     }

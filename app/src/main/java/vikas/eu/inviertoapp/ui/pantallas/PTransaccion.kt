@@ -37,7 +37,7 @@ fun PTransaccion(
     
     Column {
         Text(text = "TRANSACCIÓN")
-        Text(text = "INVERSION : ${uis.value.inversion?.nombreFondo}")
+        Text(text = "Para la inversión : ${uis.value.inversion?.nombreFondo}")
 
         Text(text = " ${uis.value.transaccion?.tipo ?: "--"}")
         if(uis.value.transaccion != null){
@@ -59,9 +59,12 @@ fun PTransaccion(
                             tipo = TipoTransaccion.AJUSTE
                             monto = cantidad.toDoubleOrNull() ?: 0.0
                             fecha = LocalDate.now().toString()
+                            origenId = uis.value.inversion!!.id
+                            destinoId = uis.value.inversion!!.id
                             descripcion = descripcion
                         }
-                        vm.setTransaccion(trans)
+                        vm.guardarTransaccion(trans)
+                        onSelect()
                     }) {
                         Text(text = "Aceptar")
                     }

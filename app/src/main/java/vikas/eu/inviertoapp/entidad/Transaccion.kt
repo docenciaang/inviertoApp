@@ -12,9 +12,9 @@ data class Transaccion(
 
     var detalle: String? = null,
 
-    var origneId: Long? = null,
+    var origenId: Long? = null,
 
-    var destinoId: String? = null,
+    var destinoId: Long? = null,
 
     var tipo: TipoTransaccion? = null,
 
