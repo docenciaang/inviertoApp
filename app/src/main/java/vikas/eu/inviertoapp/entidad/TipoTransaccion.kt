@@ -2,7 +2,6 @@ package vikas.eu.inviertoapp.entidad
 
 
 enum class TipoTransaccion {
-
     TRASPASO,
     COMPRA,
     VENTA,

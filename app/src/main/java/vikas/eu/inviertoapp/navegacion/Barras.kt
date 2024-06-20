@@ -3,6 +3,7 @@ package vikas.eu.inviertoapp.navegacion
 import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.Image
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -78,14 +79,14 @@ data class BottomNavigationItem(
                 icono = NavigationIcon.VectorIcon(Icons.Filled.Home)
             ),
             BottomNavigationItem(
-                Rutas.DETALLE_INVERSION.ruta,
-                etiqueta = "DETALLE INVERSION",
-                icono = NavigationIcon.VectorIcon(Icons.Filled.Menu)
+                Rutas.NUEVA_CUENTA.ruta,
+                etiqueta = "Nueva CC",
+                icono = NavigationIcon.VectorIcon(Icons.Filled.Add)
             ),
             BottomNavigationItem(
-                Rutas.TRANSACCION.ruta,
+                Rutas.DETALLE_INVERSION.ruta,
                 etiqueta = "TRANSACCIONES",
-                icono = NavigationIcon.VectorIcon(Icons.Filled.AccountCircle)
+                icono = NavigationIcon.VectorIcon(Icons.Filled.Add)
             )
         )
     }

@@ -9,7 +9,9 @@ data class Cuenta (
 
     var saldo: Double? = null,
 
-    var fechaCreacion: LocalDate? = null,
+    var fechaCreacion: String? = null,
 
-    var bancoId: Long? = null
+    var bancoId: Long? = null,
+
+    var movimientos: List<Transaccion> = emptyList()
 )

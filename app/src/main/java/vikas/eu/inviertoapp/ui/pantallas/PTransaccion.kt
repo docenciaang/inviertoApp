@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import vikas.eu.inviertoapp.entidad.TipoTransaccion
 import vikas.eu.inviertoapp.entidad.Transaccion
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
+import vikas.eu.inviertoapp.viewmodel.TipoOperacion
 import java.time.LocalDate
 
 
@@ -31,55 +32,91 @@ fun PTransaccion(
     onSelect: () -> Unit
 ) {
     val uis = vm.uis.collectAsState()
-    var cantidad by remember{ mutableStateOf("")  }
-    var descripcion by remember{ mutableStateOf("") }
-   
-    
+    var cantidad by remember { mutableStateOf("") }
+    var descripcion by remember { mutableStateOf("") }
+
+
     Column {
         Text(text = "TRANSACCIÓN")
-        Text(text = "Para la inversión : ${uis.value.inversion?.nombreFondo}")
+
+        if (uis.value.operacion == TipoOperacion.OPERACION_CUENTA) {
+            Text(text = "OPERACION CON CC : ${uis.value.cuenta?.numeroCuenta}")
+        } else if (uis.value.operacion == TipoOperacion.OPERACION_INVERSION) {
+            Text(text = "OPERACION CON INVERSION : : ${uis.value.inversion?.nombreFondo}")
+        }
 
         Text(text = " ${uis.value.transaccion?.tipo ?: "--"}")
-        if(uis.value.transaccion != null){
-            val trans by remember{ mutableStateOf(uis.value.transaccion!!  ) }
-            
-            when(uis.value.transaccion!!.tipo){
-                TipoTransaccion.TRASPASO -> TODO()
-                TipoTransaccion.COMPRA -> TODO()
-                TipoTransaccion.VENTA -> TODO()
-                TipoTransaccion.AJUSTE -> {
-                    Ajuste(
-                        cantidad,
-                        {cantidad = it},
-                        descripcion,
-                        {descripcion = it}
+        if (uis.value.transaccion != null) {
+            val trans by remember { mutableStateOf(uis.value.transaccion!!) }
+
+            if (comprobarCompatibilidad(uis.value.operacion, uis.value.transaccion?.tipo!!))
+                when (uis.value.transaccion!!.tipo) {
+                    TipoTransaccion.TRASPASO -> TODO()
+                    TipoTransaccion.COMPRA -> TODO()
+                    TipoTransaccion.VENTA -> TODO()
+                    TipoTransaccion.AJUSTE -> {
+                        Ajuste(
+                            cantidad,
+                            { cantidad = it },
+                            descripcion,
+                            { descripcion = it }
                         )
-                    Button(onClick = {
-                        trans.apply {
-                            tipo = TipoTransaccion.AJUSTE
-                            monto = cantidad.toDoubleOrNull() ?: 0.0
-                            fecha = LocalDate.now().toString()
-                            origenId = uis.value.inversion!!.id
-                            destinoId = uis.value.inversion!!.id
-                            descripcion = descripcion
+                        Button(onClick = {
+                            trans.apply {
+                                tipo = TipoTransaccion.AJUSTE
+                                monto = cantidad.toDoubleOrNull() ?: 0.0
+                                fecha = LocalDate.now().toString()
+                                origenId = uis.value.inversion!!.id
+                                destinoId = uis.value.inversion!!.id
+                                descripcion = descripcion
+                            }
+                            vm.guardarTransaccion(trans)
+                            onSelect()
+                        }) {
+                            Text(text = "Aceptar")
                         }
-                        vm.guardarTransaccion(trans)
-                        onSelect()
-                    }) {
-                        Text(text = "Aceptar")
                     }
+
+                    TipoTransaccion.DIVIDENDO -> TODO()
+                    TipoTransaccion.INTERESES -> TODO()
+                    TipoTransaccion.REVALORIZACION -> TODO()
+
+                    // else -> TODO("no deberia llegar al else")
+                    TipoTransaccion.ENTRADA -> {
+
+                    }
+
+                    TipoTransaccion.SALIDA -> TODO()
+                    null -> TODO("tipo transaccion nunca nulo")
                 }
-                TipoTransaccion.DIVIDENDO -> TODO()
-                TipoTransaccion.INTERESES -> TODO()
-                TipoTransaccion.REVALORIZACION -> TODO()
-                null ->  TODO("tipo transaccion nunca nulo")
-                else -> TODO("no deberia llegar al else")
-            }
         }
 
     }
 }
 
+/**
+ *
+ * @param operacion:  cuenta o inversion
+ * @param transaccion usamos el tipo
+ */
+fun comprobarCompatibilidad(operacion: TipoOperacion, transaccion: TipoTransaccion): Boolean {
+
+    if (operacion == TipoOperacion.OPERACION_CUENTA) {
+        if (transaccion == TipoTransaccion.REVALORIZACION)
+            return false
+        else
+            return true
+    } else {
+        if (transaccion in listOf(
+                TipoTransaccion.ENTRADA,
+                TipoTransaccion.SALIDA,
+            )
+        )
+            return false
+        else
+            return true
+    }
+}
 
 /**
  *  Nuevo saldo para corregir errores en el saldo
@@ -92,19 +129,32 @@ fun Ajuste(
     onDescripcionChange: (String) -> Unit
 ) {
 
-
     Column {
         TextField(
-            onValueChange =  onCantidadChange,
+            onValueChange = onCantidadChange,
             value = cantidad,
-            label = {Text("cantidad (€)")}
+            label = { Text("cantidad (€)") }
         )
         TextField(
             onValueChange = onDescripcionChange,
             value = descripcion,
-            label= {Text("descripcion")}
+            label = { Text("descripcion") }
         )
 
     }
 
+}
+
+
+/**
+ * origen cuenta, destino inversion
+ *
+ */
+@Composable
+fun Compra(
+
+) {
+    Column {
+        Text(text = "Compra nuevas participaciones")
+    }
 }

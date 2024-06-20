@@ -10,8 +10,8 @@ import java.net.CookiePolicy
 import java.net.CookieHandler
 import java.util.concurrent.TimeUnit
 
-// const val BASE_URL="http://192.168.1.20:8080/api/"
- const val BASE_URL="http://192.168.83.114:8080/api/"
+ const val BASE_URL="http://192.168.1.20:8080/api/"
+//const val BASE_URL="http://192.168.83.114:8080/api/"
 //const val BASE_URL="http://tr.vikas.eu/api/"
 
 
@@ -54,5 +54,7 @@ private val retrofit = Retrofit.Builder()
 
 object ApiService {
     val inversionService: InversionService by lazy{ retrofit.create(InversionService::class.java)}
+    val cuentaService: CuentaService by lazy{ retrofit.create(CuentaService::class.java)}
+
     val transaccionesService: TransaccionService by lazy{ retrofit.create(TransaccionService::class.java)}
 }

@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import vikas.eu.inviertoapp.entidad.TipoTransaccion
 import vikas.eu.inviertoapp.entidad.Transaccion
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
+import vikas.eu.inviertoapp.viewmodel.TipoOperacion
 
 /**
  * ===============================================
@@ -34,11 +35,20 @@ fun PNuevaTransaccion(
     vm: InvViewModel = viewModel(),
     onContinuar: () -> Unit
 ) {
+    val uis = vm.uis.collectAsState()
+
     var tipo by remember{ mutableStateOf(TipoTransaccion.AJUSTE) }
 
     Column {
         Text("Elegir tipo de transacción")
         Text(text = "Pruebas elegido =$tipo")
+
+        if( uis.value.operacion == TipoOperacion.OPERACION_CUENTA){
+            Text(text = "OPERACION CON CC")
+        } else   if( uis.value.operacion == TipoOperacion.OPERACION_INVERSION){
+            Text(text = "OPERACION CON INVERSION")
+        }
+
         ExposedDropdownMenuSample(
             label="Tipo transaccion",
             options = TipoTransaccion.values().toList(),
@@ -57,10 +67,6 @@ fun PNuevaTransaccion(
 }
 
 
-
-fun <T : Enum<T>> enumToStringList(enumClass: Class<T>): List<String> {
-    return enumClass.enumConstants.map { it.name }
-}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

@@ -22,29 +22,46 @@ import vikas.eu.inviertoapp.viewmodel.InvViewModel
 @Composable
 fun PHome(
     vm: InvViewModel = viewModel(),
-    onSelect: () -> Unit
+    onSelectInversion: () -> Unit,
+    onSelectCuenta: () -> Unit
 ){
     val uis = vm.uis.collectAsState()
     var contador by remember{ mutableIntStateOf(1) }
 
 
-    LaunchedEffect(contador) {
-        vm.getInversiones()
+    LaunchedEffect(key1= Unit) {
+        vm.getDatos()
     }
     Column {
         Text(text="Ventana Home")
 
-        Button(onClick = { contador++ }) {
-            Text(text = "Pedir inversiones")
-        }
+       Button(onClick = { contador++ }) {
+           Text(text = "Pedir datos")
+      }
         LazyColumn {
+            item{
+                Text(text = "CUENTAS")
+            }
+            items(uis.value.listaCuentas){
+                Card(
+                    onClick ={
+                        vm.setCuenta(it)
+                        onSelectCuenta()}
+                ) {
+                    Text(text = "${it.numeroCuenta ?: "--"} ${it.fechaCreacion} : ${it.saldo}")
+
+                }
+            }
+            item{
+                Text("INVERSIONES")
+            }
             items(uis.value.listaInversiones ){
                 Card(
                     onClick ={
                         vm.setInversion(it)
-                        onSelect()}
+                        onSelectInversion()}
                 ) {
-                    Text(text = "${it.nombreFondo ?: "--"} ${it.fechaInversion} : ${uis.value.inversion?.monto}")
+                    Text(text = "${it.nombreFondo ?: "--"} ${it.fechaInversion} : ${it.monto}")
 
                 }
 

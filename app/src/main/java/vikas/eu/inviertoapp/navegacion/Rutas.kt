@@ -8,4 +8,8 @@ sealed class Rutas(var ruta: String) {
     object  DETALLE_INVERSION: Rutas("Detalle de inversion")
     object TRANSACCION : Rutas("Transacción")
     object NUEVA_TRANSACCION: Rutas("Nueva transacción")
+
+    object DETALLE_CUENTA: Rutas("Detalle cuenta")
+
+    object NUEVA_CUENTA: Rutas("Nueva cuenta")
 }
