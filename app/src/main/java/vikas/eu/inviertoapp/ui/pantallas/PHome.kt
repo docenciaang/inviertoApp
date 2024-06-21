@@ -18,15 +18,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
+import vikas.eu.inviertoapp.viewmodel.StatusViewModel
 
 @Composable
 fun PHome(
     vm: InvViewModel = viewModel(),
+    vmStatus : StatusViewModel = hiltViewModel(),
     onSelectInversion: () -> Unit,
     onSelectCuenta: () -> Unit
 ){
     val uis = vm.uis.collectAsState()
     var contador by remember{ mutableIntStateOf(1) }
+
+  //  val vmStatus : StatusViewModel = hiltViewModel()
 
 
     LaunchedEffect(key1= Unit) {
