@@ -60,13 +60,16 @@ fun Navegacion(
 
         composable(Rutas.DETALLE_CUENTA.ruta) {
             PDetalleCuenta(
-                vm
-            ) { esNuevaTransaccion ->
+                vm,
+            onTransaccion =  { esNuevaTransaccion ->
                 if (esNuevaTransaccion)
                     navController.navigate(Rutas.NUEVA_TRANSACCION.ruta)
                 else
                     navController.navigate(Rutas.HOME.ruta)
-            }
+            },
+                onGuardar = { seGuarda ->
+                    navController.navigate(Rutas.HOME.ruta)
+            })
         }
         composable(Rutas.NUEVA_CUENTA.ruta) {
             PNuevaCuenta(vm = vm) {

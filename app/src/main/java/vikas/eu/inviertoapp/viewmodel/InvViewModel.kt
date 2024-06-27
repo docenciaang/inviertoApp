@@ -41,8 +41,8 @@ class InvViewModel: ViewModel() {
      */
     fun setInversion(inv: Inversion) {
         viewModelScope.launch(Dispatchers.IO) {
-            val res = inversionService.getDetalles(inv.id)
-            if (res.isSuccessful){
+            val res = inv.id?.let { inversionService.getDetalles(it) }
+            if (res?.isSuccessful == true){
                 _uis.update { it.copy(inversion = res.body()) }
             }
         }
@@ -106,12 +106,39 @@ class InvViewModel: ViewModel() {
 
     }
 
-    fun crearCuenta(cuenta: Cuenta) {
+    fun nuevaCuenta(){
+        _uis.update { it.copy(cuenta = Cuenta()) }
+    }
+
+    /** Crea o modifica una cuenta
+     *
+     */
+    fun crearOActualizarCuenta(cuenta: Cuenta) {
         viewModelScope.launch(Dispatchers.IO) {
-            val res = cuentaService.insertar(cuenta)
+            if( cuenta.id == null ) {
+                val res = cuentaService.insertar(cuenta)
+                if (res.isSuccessful) {
+                    cuenta.id = res.body()?.id
+                    _uis.update { it.copy(cuenta = cuenta) }
+                }
+            } else{
+                val resUpdate = cuentaService.actualizar(cuenta.id!!, cuenta)
+                if (resUpdate.isSuccessful){
+                    _uis.update { it.copy(cuenta = resUpdate.body()) }
+                }
+            }
+        }
+    }
+
+    fun nuevaInversion(){
+        _uis.update { it.copy(inversion = Inversion()) }
+    }
+    fun crearInversion(inversion: Inversion) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = inversionService.insertar(inversion)
             if (res.isSuccessful) {
-                cuenta.id = res.body()?.id
-                _uis.update { it.copy(cuenta = cuenta) }
+                inversion.id = res.body()?.id!!
+                _uis.update { it.copy(inversion = inversion) }
             }
         }
     }

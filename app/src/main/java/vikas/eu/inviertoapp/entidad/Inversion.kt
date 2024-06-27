@@ -3,7 +3,7 @@ package vikas.eu.inviertoapp.entidad
 import java.time.LocalDate
 
 data class Inversion(
-    val id: Long,
+    var id: Long? = null,
     var monto: Double? = null,
     var fechaInversion: String? = null,
     var fechaVencimiento: String? = null,

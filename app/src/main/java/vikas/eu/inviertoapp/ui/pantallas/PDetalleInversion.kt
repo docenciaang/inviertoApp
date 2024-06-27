@@ -27,7 +27,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import vikas.eu.inviertoapp.entidad.Transaccion
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
 
-
+/**
+ * Ver y editar inversoin
+ * Si el id de la inversion es null, es una creación de inversion
+ *
+ */
 @Composable
 fun PDetalleInversion(
     vm: InvViewModel = viewModel(),

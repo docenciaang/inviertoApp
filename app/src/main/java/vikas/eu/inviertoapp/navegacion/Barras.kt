@@ -85,7 +85,7 @@ data class BottomNavigationItem(
             ),
             BottomNavigationItem(
                 Rutas.DETALLE_INVERSION.ruta,
-                etiqueta = "TRANSACCIONES",
+                etiqueta = "Inversiones",
                 icono = NavigationIcon.VectorIcon(Icons.Filled.Add)
             )
         )

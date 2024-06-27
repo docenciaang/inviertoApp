@@ -29,7 +29,7 @@ fun PNuevaCuenta(
         TextField(value = numCC, onValueChange ={numCC = it}, label={ Text(text = "num cc")} )
         TextField(value = saldoIncial, onValueChange ={saldoIncial = it}, label={ Text(text = "num cc")} )
         Button(onClick = {
-            vm.crearCuenta(Cuenta(
+            vm.crearOActualizarCuenta(Cuenta(
                 numeroCuenta = numCC,
                 saldo = saldoIncial.toDoubleOrNull() ,
                 fechaCreacion = LocalDate.now().toString()
