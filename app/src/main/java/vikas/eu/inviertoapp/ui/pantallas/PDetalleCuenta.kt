@@ -24,6 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
 
+/**
+ * Detalle de una cuenta.
+ * Modificación y creación
+ * @param vm ViewModel
+ * @param onTransaccion Callback para añadir nueva transaccion a la cuenta
+ * @param onGuardar Callback para la guardar o cancelar la modificación
+ */
 @Composable
 fun PDetalleCuenta(
     vm: InvViewModel = viewModel(),
@@ -82,7 +89,7 @@ fun PDetalleCuenta(
                     fechaCreacion = fechaCreacion,
                     saldo = saldo
                     )
-                vm.crearOActualizarCu11/1enta(cuenta!!)
+                vm.crearOActualizarCuenta(cuenta!!)
                 onGuardar(true)
 
             }

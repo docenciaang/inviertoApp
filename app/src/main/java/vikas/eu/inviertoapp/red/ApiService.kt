@@ -10,8 +10,8 @@ import java.net.CookiePolicy
 import java.net.CookieHandler
 import java.util.concurrent.TimeUnit
 
- const val BASE_URL="http://192.168.1.3:8080/api/"
-//const val BASE_URL="http://192.168.83.114:8080/api/"
+ //const val BASE_URL="http://192.168.1.3:8080/api/"
+const val BASE_URL="http://192.168.159.114:8080/api/"
 //const val BASE_URL="http://tr.vikas.eu/api/"
 
 
