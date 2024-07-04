@@ -36,6 +36,16 @@ class InvViewModel: ViewModel() {
     }
 
 
+
+    fun detalleInversion(){
+       // if (uis.value.inversion != null && uis.value.inversion!!.id !=  null )
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = _uis.value.inversion?.id?.let { inversionService.getDetalles(it) }
+            if (res?.isSuccessful == true){
+                _uis.update { it.copy(inversion = res.body()) }
+            }
+        }
+    }
     /**
      * Traemos detalle de la inversion
      */
@@ -64,27 +74,47 @@ class InvViewModel: ViewModel() {
     fun guardarTransaccion(trans : Transaccion) {
         viewModelScope.launch(Dispatchers.IO) {
             if(trans.id == null || trans.id == 0L) {
+                if (trans.id == 0L)
+                    trans.id = null // espera null para insertar
                 val res = transaccionesService.insertar(trans)
             if (res.isSuccessful){
                 _uis.update { it.copy(transaccion = trans) }
+                detalleInversion()
             }
             } else{
                 // put
                 val res = transaccionesService.actualizar(trans.id!!, trans)
                 if (res.isSuccessful){
                     _uis.update { it.copy(transaccion = trans) }
+                    detalleInversion()
                 }
             }
         }
 
     }
 
+    /**
+     * Nueva transaccion usando como origen la inversion
+     */
     fun nuevaTransaccion() {
         val trans = Transaccion()
         trans.id = 0
         _uis.update { it.copy(transaccion = trans)}
     }
 
+
+    /**
+     * Obtiene detalle de uis.cuenta
+     */
+    fun detalleCuenta(){
+         if (uis.value.cuenta != null && uis.value.cuenta!!.id !=  null  && uis.value.cuenta!!.id != 0L)
+             viewModelScope.launch(Dispatchers.IO) {
+                 val res = _uis.value.cuenta?.id?.let { cuentaService.getDetalles(it) }
+            if (res?.isSuccessful == true){
+                _uis.update { it.copy(cuenta = res.body()) }
+            }
+        }
+    }
     /**
      * ===============================================
      *  CUENTAS

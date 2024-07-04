@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -55,8 +56,6 @@ fun PHome(
         LazyColumn {
             item{
                 Card {
-
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -80,14 +79,14 @@ fun PHome(
                         vm.setCuenta(it)
                         onSelectCuenta()}
                 ) {
-                    Text(text = "${it.numeroCuenta ?: "--"} ${it.fechaCreacion} : ${it.saldo}")
+                   LineaCuenta(cuenta = it)
 
                 }
             }
             item{
-                Card {
+                Card(
 
-
+                ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -98,7 +97,7 @@ fun PHome(
                             vm.nuevaInversion()
                             onSelectCuenta()
                         }) {
-                            Icon(Icons.Default.Add, contentDescription = "nueva cuenta")
+                            Icon(Icons.Default.Add, contentDescription = "nueva inversion")
                         }
                     }
                 }
@@ -110,13 +109,55 @@ fun PHome(
                         vm.setInversion(it)
                         onSelectInversion()}
                 ) {
-                    Text(text = "${it.nombreFondo ?: "--"} ${it.fechaInversion} : ${it.monto}")
+                  LineaInversion(inversion = it)
 
                 }
 
-
-
             }
         }
+    }
+}
+
+
+@Composable
+fun LineaCuenta(cuenta: Cuenta){
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "${cuenta.id}:${cuenta.numeroCuenta}"
+        )
+
+        Text(
+            modifier = Modifier.weight(1f),
+            text = " : ${cuenta.fechaCreacion}".take(13)
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "${cuenta.saldo}"
+        )
+    }
+}
+
+
+@Composable
+fun LineaInversion(inversion: Inversion){
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "${inversion.id}:${inversion.nombreFondo}"
+        )
+
+        Text(
+            modifier = Modifier.weight(1f),
+            text = " : ${inversion.fechaInversion}".take(13)
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "${inversion.monto}"
+        )
     }
 }

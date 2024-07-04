@@ -33,7 +33,7 @@ import vikas.eu.inviertoapp.viewmodel.TipoOperacion
 @Composable
 fun PNuevaTransaccion(
     vm: InvViewModel = viewModel(),
-    onContinuar: () -> Unit
+    onContinuar: (TipoTransaccion) -> Unit ={}
 ) {
     val uis = vm.uis.collectAsState()
 
@@ -54,15 +54,14 @@ fun PNuevaTransaccion(
             options = TipoTransaccion.values().toList(),
             ){ elegido: TipoTransaccion ->
                tipo = elegido
+            onContinuar(tipo)
+
         }
-        Button(onClick = {
-            val trans = Transaccion()
-            trans.tipo = tipo
-            vm.setTransaccion(trans)
-            onContinuar()
-        }) {
-            Text("Continuar")
-        }
+//        Button(onClick = {
+//            onContinuar(tipo)
+//        }) {
+//            Text("Vamos...")
+//        }
     }
 }
 

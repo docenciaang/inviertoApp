@@ -2,6 +2,8 @@ package vikas.eu.inviertoapp.ui.pantallas
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,20 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import vikas.eu.inviertoapp.entidad.TipoTransaccion
 import vikas.eu.inviertoapp.entidad.Transaccion
+import vikas.eu.inviertoapp.ui.componentes.FechaPicker
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
 import vikas.eu.inviertoapp.viewmodel.TipoOperacion
+import java.time.LocalDateTime
 
-
-
-val transaccionesPermitidasInversion = listOf(
-    TipoTransaccion.AJUSTE,
-    TipoTransaccion.TRASPASO,
-    TipoTransaccion.COMPRA,
-    TipoTransaccion.VENTA,
-    TipoTransaccion.DIVIDENDO,
-    TipoTransaccion.INTERESES,
-    TipoTransaccion.REVALORIZACION,
-)
+val listaTransaccionCuenta = listOf(
+     TipoTransaccion.AJUSTE,
+     TipoTransaccion.TRASPASO,
+     TipoTransaccion.SALIDA,
+     TipoTransaccion.ENTRADA
+ )
 
 /**
  * Crea una Transaccion
@@ -43,39 +42,45 @@ val transaccionesPermitidasInversion = listOf(
  * para poder ser reutilizable en varioas ventanas
  */
 @Composable
-fun PTransaccion(
+fun PTransaccionCuenta(
     vm: InvViewModel = viewModel(),
     onSelect: () -> Unit
 ) {
     val uis = vm.uis.collectAsState()
-    var cantidad by remember { mutableStateOf("") }
-    var fechaT by remember { mutableStateOf("") }
-    // var descripcionT by remember { mutableStateOf("") }
+    var cantidad by remember { mutableStateOf(if(uis.value.transaccion?.id == 0L) "" else uis.value.transaccion?.monto.toString()) }
+    var fechaT by remember { mutableStateOf(if(uis.value.transaccion?.id == 0L) "" else uis.value.transaccion?.fecha) }
+    var msg by remember { mutableStateOf("") }
+    var hayError by remember { mutableStateOf(false) }
 
     var transaccion by remember { mutableStateOf(  Transaccion(id = 0, tipo = TipoTransaccion.AJUSTE)) }
 
 
-    Column {
-        Text(text = "TRANSACCIÓN INVERSION")
+    Column(
+        modifier = Modifier.fillMaxWidth(0.9f),
 
+    ) {
+        Text(text = "TRANSACCIÓN CUENTA (${uis.value.cuenta?.saldo} €)")
 
         ExposedDropdownMenuSample(
             label = "Tipo transaccion",
-            options = transaccionesPermitidasInversion,
+            options =  listaTransaccionCuenta, // TipoTransaccion.values().toList(),
         ) { elegido ->
 
             transaccion = transaccion.copy(tipo = elegido)
-            Log.d("MiDebug" , "elegido = ${transaccion.tipo}")
+           // Log.d("MiDebug" , "elegido = ${transaccion.tipo}")
         }
 
         OutlinedTextField(
             value = cantidad,
             onValueChange = { cantidad = it },
             label = { Text(text = "Cantidad (€)") })
-        OutlinedTextField(
-            value = fechaT,
-            onValueChange = { fechaT = it },
-            label = { Text(text = "fecha (yyyy-mm-dd)") })
+
+        FechaPicker(
+            label = "Fecha",
+            fechaMinima = LocalDateTime.of(1990,1,1,0,0)
+            ) {
+            fechaT = it.toString()
+        }
 
 
         /**
@@ -85,84 +90,39 @@ fun PTransaccion(
 
       //  if (comprobarCompatibilidad(uis.value.operacion, uis.value.transaccion?.tipo!!))
             when (transaccion.tipo) {
-                TipoTransaccion.TRASPASO -> {
-                    // inversion destino
-                    transaccion.origenId = uis.value.inversion?.id
-                    // necesitamos un valor por defecto
-                    transaccion.destinoId = uis.value.listaInversiones.get(0).id
-
-                    ElegirCuentaInversion(
-                        msg = "Inversion destino",
-                        opciones = uis.value.listaInversiones
-                    ) {
-                        transaccion.destinoId = it.id
-                    }
-                }
-
-                TipoTransaccion.COMPRA -> {
-                    transaccion.origenId = uis.value.listaCuentas.get(0).id
-                    ElegirCuentaInversion(
-                        msg = "Cuenta de cargo",
-                        opciones = uis.value.listaCuentas
-                    ) {
-                        transaccion.destinoId = uis.value.inversion?.id
-                        transaccion.origenId = it.id
-                    }
-
-                }
-
-                TipoTransaccion.VENTA -> {
-                    // cuenta destino
-                    transaccion.destinoId = uis.value.listaCuentas.get(0).id
-                    ElegirCuentaInversion(
-                        msg = "Cuenta destino",
-                        opciones = uis.value.listaCuentas
-                    ) {
-                        transaccion.destinoId = it.id
-                    }
-                    transaccion.origenId = uis.value.inversion?.id
-
-                }
-
                 TipoTransaccion.AJUSTE -> {
                     transaccion.apply {
-                        origenId = uis.value.inversion!!.id
-                        destinoId = uis.value.inversion!!.id
+                        origenId = uis.value.cuenta!!.id
+                        destinoId = uis.value.cuenta!!.id
                     }
 
                 }
-
-                TipoTransaccion.DIVIDENDO -> {
-                    // cantidad
+                TipoTransaccion.TRASPASO -> {
+                    // inversion destino
+                    transaccion.origenId = uis.value.cuenta?.id
+                    // necesitamos un valor por defecto
                     transaccion.destinoId = uis.value.listaCuentas.get(0).id
-                    ElegirCuentaInversion(
-                        msg = "Cuenta ingreso dividendo",
+
+                    ElegirCuentaInversion2(
+                        msg = "Inversion destino",
                         opciones = uis.value.listaCuentas
                     ) {
-                        transaccion.origenId = uis.value.inversion!!.id
                         transaccion.destinoId = it.id
                     }
                 }
 
-                TipoTransaccion.INTERESES -> {
-                    ElegirCuentaInversion(
-                        msg = "Cuenta ingreso innrwewa",
-                        opciones = uis.value.listaCuentas
-                    ) {
-                        transaccion.origenId = uis.value.inversion!!.id
-                        transaccion.destinoId = it.id
-                    }
-                }
+                TipoTransaccion.SALIDA -> {
+                    transaccion.origenId = uis.value.cuenta?.id
+                    transaccion.destinoId = null
 
-                TipoTransaccion.REVALORIZACION -> {
-                    transaccion.apply {
-                        origenId = uis.value.inversion!!.id
-                        destinoId = origenId
-                    }
+                }
+                TipoTransaccion.ENTRADA -> {
+                    transaccion.origenId = null
+                    transaccion.destinoId = uis.value.cuenta?.id
                 }
 
                 null -> TODO("tipo transaccion nunca nulo")
-                else -> TODO("no deberia llegar al else")
+                else -> TODO("OPERACION NO PERMITIDA PARA CC: ${transaccion.tipo}")
 
             }
 
@@ -170,37 +130,60 @@ fun PTransaccion(
         Button(onClick = {
             transaccion.apply {
                 monto = cantidad.toDoubleOrNull() ?: 0.0
-                fecha = fechaT
+
+                if(fechaT ==""){
+                    hayError = true
+                    msg = "La fecha es obligatoria"
+                }else
+                    fecha = fechaT
+
+                // comprobaciones
+                when(transaccion.tipo){
+                    TipoTransaccion.TRASPASO -> {
+                        if (monto!! > uis.value.cuenta?.saldo!!){
+                            hayError= true
+                            msg="No hay saldo suficiente en ${uis.value.cuenta.toString()}"
+                        }
+                    }
+          
+                    TipoTransaccion.AJUSTE -> {
+                        //nada
+                    }
+                    TipoTransaccion.ENTRADA -> {
+                        //nada
+                    }
+                    TipoTransaccion.SALIDA -> {
+                        if (monto!! > uis.value.cuenta?.saldo!!){
+                            hayError= true
+                            msg="No hay saldo suficiente en ${uis.value.cuenta.toString()}"
+                        }
+                    }
+                    null -> TODO()
+                  else -> TODO("ERROR TIPO TRANSACCION CC")
+
+                }
+              
             }
-            vm.guardarTransaccion(transaccion)
-            onSelect()
+            if ( ! hayError){
+                vm.guardarTransaccion(transaccion)
+                onSelect()
+            }
         }) {
             Text(text = "Crear")
         }
     }
-}
 
-/**
- *
- * @param operacion:  cuenta o inversion
- * @param transaccion usamos el tipo
- */
-fun comprobarCompatibilidad(operacion: TipoOperacion, transaccion: TipoTransaccion): Boolean {
-
-    if (operacion == TipoOperacion.OPERACION_CUENTA) {
-        if (transaccion == TipoTransaccion.REVALORIZACION)
-            return false
-        else
-            return true
-    } else {
-        if (transaccion in listOf(
-                TipoTransaccion.ENTRADA,
-                TipoTransaccion.SALIDA,
+    if (  hayError){
+        AlertDialog(
+            onDismissRequest = { hayError= false  },
+            confirmButton = {
+                Button(onClick = { hayError= false }) {
+                    Text(text = "OK")
+                }
+                 },
+            title = { Text(text = "Error entrada")},
+            text = { Text(text = msg)}
             )
-        )
-            return false
-        else
-            return true
     }
 }
 
@@ -213,7 +196,7 @@ fun comprobarCompatibilidad(operacion: TipoOperacion, transaccion: TipoTransacci
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> ElegirCuentaInversion(
+fun <T> ElegirCuentaInversion2(
     msg: String,
     opciones: List<T>,
     onSelect: (T) -> Unit
@@ -269,10 +252,6 @@ fun <T> ElegirCuentaInversion(
             }
         }
 
-//        Button(onClick = {
-//            onSelect(opcionSeleccionada)
-//        }) {
-//            Text(text = "Ok")
-//        }
+
     }
 }

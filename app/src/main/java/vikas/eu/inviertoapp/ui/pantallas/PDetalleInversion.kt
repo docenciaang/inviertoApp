@@ -3,6 +3,7 @@ package vikas.eu.inviertoapp.ui.pantallas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -47,26 +48,27 @@ fun PDetalleInversion(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Text(text = "        ${uis.value.inversion?.nombreFondo ?: "--"} \n Inicial: ${uis.value.inversion?.monto} €")
+        Text(text = "        ${uis.value.inversion?.nombreFondo ?: "--"}")
 
-        Text(text = " Actual : XXXX")
+        Text(text = " Actual: ${uis.value.inversion?.monto} € \n Inicial : ${uis.value.inversion?.movimientos?.first()?.monto} €")
 
         HorizontalDivider()
 
         LazyColumn {
             items(uis.value.inversion?.movimientos ?: emptyList()) {
                // var verDetalle by remember { mutableStateOf(false) }
-                Card(onClick = {
+                Detalle(trans = it ) {
                     // uis tiene la inversion para la transaccion
-                    vm.guardarTransaccion(it)
+                    vm.setTransaccion(it)
                     onTransaccion( false)
-                }) {
-                    Text(text = "${it.fecha} :  ${it.monto} € : ${it.saldo} €")
                 }
+
+
             }
         }
 
         FloatingActionButton(onClick = {
+            vm.nuevaTransaccion()
             onTransaccion(true)
         }) {
             Icon(Icons.Default.Add, contentDescription = "Add")
@@ -78,9 +80,15 @@ fun PDetalleInversion(
 
 
 @Composable
-fun Detalle(trans: Transaccion) {
-    Column {
-        Text(text = "${trans.tipo} \n ${trans.fecha} \n ${trans.monto} \n ${trans.origenId} \n ${trans.hashCode()}")
-
+fun Detalle(
+    trans: Transaccion,
+    onPulsado: () -> Unit
+    ) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onPulsado
+    ) {
+        Text(text = "${trans.tipo} : ${trans.fecha} : ${trans.monto} € ${trans.saldo}  €")
     }
+
 }

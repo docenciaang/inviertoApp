@@ -14,4 +14,10 @@ data class Cuenta (
     var bancoId: Long? = null,
 
     var movimientos: List<Transaccion> = emptyList()
-)
+
+
+){
+    override fun toString(): String{
+        return "$id,$numeroCuenta"
+    }
+}

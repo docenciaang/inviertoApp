@@ -16,9 +16,9 @@ import kotlinx.serialization.Serializable
 import vikas.eu.inviertoapp.ui.pantallas.PDetalleCuenta
 import vikas.eu.inviertoapp.ui.pantallas.PDetalleInversion
 import vikas.eu.inviertoapp.ui.pantallas.PHome
-import vikas.eu.inviertoapp.ui.pantallas.PNuevaCuenta
 import vikas.eu.inviertoapp.ui.pantallas.PNuevaTransaccion
 import vikas.eu.inviertoapp.ui.pantallas.PTransaccion
+import vikas.eu.inviertoapp.ui.pantallas.PTransaccionCuenta
 import vikas.eu.inviertoapp.viewmodel.InvViewModel
 
 @Composable
@@ -53,29 +53,34 @@ fun Navegacion(
             }
         }
         composable(Rutas.NUEVA_TRANSACCION.ruta) {
-            PNuevaTransaccion(vm) {
-                navController.navigate(Rutas.TRANSACCION.ruta)
+            PTransaccion(vm) {
+                navController.navigateUp()
             }
         }
 
         composable(Rutas.DETALLE_CUENTA.ruta) {
             PDetalleCuenta(
                 vm,
-            onTransaccion =  { esNuevaTransaccion ->
-                if (esNuevaTransaccion)
-                    navController.navigate(Rutas.NUEVA_TRANSACCION.ruta)
-                else
-                    navController.navigate(Rutas.HOME.ruta)
-            },
+                onTransaccion = { esNuevaTransaccion ->
+                    if (esNuevaTransaccion)
+                        navController.navigate(Rutas.TRANSACCION_CUENTA.ruta)
+                    else
+                        navController.navigate(Rutas.TRANSACCION_CUENTA.ruta)
+
+
+                },
                 onGuardar = { seGuarda ->
                     navController.navigate(Rutas.HOME.ruta)
-            })
+                })
         }
-        composable(Rutas.NUEVA_CUENTA.ruta) {
-            PNuevaCuenta(vm = vm) {
-                navController.navigate(Rutas.HOME.ruta)
+        composable(Rutas.TRANSACCION_CUENTA.ruta){
+            PTransaccionCuenta(vm) {
+
+                navController.navigateUp()
+
             }
         }
+
     }
 }
 

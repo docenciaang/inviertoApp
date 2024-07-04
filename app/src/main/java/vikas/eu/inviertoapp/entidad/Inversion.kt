@@ -15,4 +15,8 @@ data class Inversion(
     var archivado: Int? = null,
     var movimientos: List<Transaccion> = emptyList()
 
-)
+) {
+    override fun toString(): String{
+        return "$id,$nombreFondo"
+    }
+}
